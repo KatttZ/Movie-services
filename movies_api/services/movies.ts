@@ -1,7 +1,7 @@
 "use strict";
 
 import { Request, Response } from "express";
-import { Movie, Rating } from "../types/movies";
+import { Movie, MoviePreview, Rating } from "../types/movies";
 import { ratingsDB } from "../db/ratings";
 import { moviesDB } from "../db/movies";
 import { formatBudget } from "../util/format";
@@ -12,7 +12,7 @@ import axios from "axios";
 // List All movies
 export const getAllMovies = (
   query: Request["query"],
-  onSuccess: onSuccess<PaginatedResponse<any>>,
+  onSuccess: onSuccess<PaginatedResponse<MoviePreview>>,
   onError: onError
 ): void => {
   const page = Number(query.page) || 1;
@@ -47,8 +47,6 @@ export const getAllMovies = (
         return;
       }
 
-      console.log(rows[0]);
-
       const movies = rows.map((row) => ({
         imdbId: row.imdbId,
         title: row.title,
@@ -67,10 +65,10 @@ export const getAllMovies = (
   });
 };
 
-//GET Movie Details (single movie - keeps original format)
+//GET Movie Details
 export const getMovie = (
   id: string,
-  onSuccess: onSuccess<any>,
+  onSuccess: onSuccess<Movie>,
   onError: onError
 ): void => {
   const query = `SELECT * FROM movies WHERE movieId = ?`;
@@ -135,7 +133,7 @@ export const getMovie = (
 export const getMoviesByYear = (
   year: string,
   query: Request["query"],
-  onSuccess: onSuccess<PaginatedResponse<any>>,
+  onSuccess: onSuccess<PaginatedResponse<MoviePreview>>,
   onError: onError
 ): void => {
   const page = Number(query.page) || 1;
@@ -196,7 +194,7 @@ export const getMoviesByYear = (
 export const getMoviesByGenre = (
   genre: string,
   query: Request["query"],
-  onSuccess: onSuccess<PaginatedResponse<any>>,
+  onSuccess: onSuccess<PaginatedResponse<MoviePreview>>,
   onError: onError
 ): void => {
   const page = Number(query.page) || 1;
@@ -204,7 +202,7 @@ export const getMoviesByGenre = (
   const limit = 50;
   const offset = (+page - 1) * limit;
 
-  // For genre, we need to count matches first (this is a bit more complex due to JSON filtering)
+  // For genre, we need to count matches first
   const countQuery = `
     SELECT imdbId, genres
     FROM movies
