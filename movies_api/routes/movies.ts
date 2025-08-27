@@ -1,11 +1,11 @@
 import { Router } from "express";
-import * as movies from "../services/movies";
+import * as moviesController from '../controllers/movies';
 
 const movieRouter = Router();
 
-movieRouter.get("/all", movies.getAllMovies);
-movieRouter.get("/:movieId", movies.getMovie);
-movieRouter.get("/year/:year", movies.getMoviesByYear);
-movieRouter.get("/genre/:genre", movies.getMoviesByGenre);
+movieRouter.get("/all", moviesController.getAllMovies);
+movieRouter.get("/:movieId", moviesController.getMovieById);
+movieRouter.get("/year/:year", moviesController.getMoviesByYear);
+movieRouter.get("/genre/:genre", moviesController.getMoviesByGenre);
 
 export default movieRouter;

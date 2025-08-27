@@ -1,8 +1,8 @@
 import { Router } from "express";
-import * as ratings from "../services/ratings";
+import * as ratingsController from '../controllers/ratings';
 
 const ratingRouter = Router();
 
-ratingRouter.get("/:movieId", ratings.getRating);
+ratingRouter.get("/:movieId", ratingsController.getRatingsByMovieId);
 
 export default ratingRouter;

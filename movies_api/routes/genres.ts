@@ -1,10 +1,8 @@
 import { Router } from "express";
-import * as genres from "../services/genres";
+import * as genresController from "../controllers/genres";
 
 const genreRouter = Router();
 
-genreRouter.get("/all", (req, res) => {
-  genres.getGenreList(req, res);
-});
+genreRouter.get("/all", genresController.getAllGenres);
 
 export default genreRouter;

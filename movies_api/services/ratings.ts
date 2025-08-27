@@ -1,22 +1,23 @@
-"use strict";
+'use strict';
 
-import { Request, Response } from "express";
-import { ratingsDB } from "../db/ratings";
+import { Request, Response } from 'express';
+import { ratingsDB } from '../db/ratings';
+import { onError, onSuccess } from '../types/util';
 
-export const getRating = (req: Request, res: Response): void => {
-  const query = "SELECT * FROM ratings WHERE movieId = ?";
+export const getRating = (movieId: number, onSuccess: onSuccess<any>, onError: onError) => {
+  const query = 'SELECT * FROM ratings WHERE movieId = ?';
 
-  ratingsDB.all(query, [31], (err: Error | null, rows: any[]) => {
+  ratingsDB.all(query, [movieId], (err: Error | null, rows: any[]) => {
     if (err) {
-      res.status(500).send(JSON.stringify(err));
-      return; // Ensure to return after sending a response
+      onError(500, err.message);
+      return;
     }
 
     if (rows.length === 0) {
-      res.status(404).send("No ratings found"); // Send a response for 404
-      return; // Ensure to return after sending a response
+      onError(404, 'No ratings found');
+      return;
     }
 
-    res.send(rows);
+    onSuccess(rows);
   });
 };

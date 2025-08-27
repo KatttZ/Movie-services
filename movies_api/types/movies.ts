@@ -8,8 +8,13 @@ export interface ProductionCompany {
   name: string;
 }
 
+export interface Rating {
+  source: string;
+  value: number | string;
+}
+
 export interface Movie {
-  imdbid: string;
+  imdbId: string;
   title: string;
   description: string;
   genres: Genre[];
@@ -18,7 +23,7 @@ export interface Movie {
   runtime: number;
   language: string;
   productionCompanies: ProductionCompany[];
-  ratings: number | null;
+  ratings: Rating[]
 }
 
-export type MoviePreview = Pick<Movie, 'imdbid' | 'title' | 'genres' | 'releaseDate' | 'budget'>;
+export type MoviePreview = Pick<Movie, 'imdbId' | 'title' | 'genres' | 'releaseDate' | 'budget'>;
