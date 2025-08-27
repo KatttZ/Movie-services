@@ -1,41 +1,11 @@
-'use strict';
+import { Router } from "express";
+import * as movies from "../services/movies";
 
-import { Database } from 'sqlite3';
-import { Request, Response } from 'express';
+const movieRouter = Router();
 
-export const getAllMovies = (db: Database, req: Request, res: Response): void => {
-  const query = 'SELECT * FROM movies LIMIT 100;';
+movieRouter.get("/all", movies.getAllMovies);
+movieRouter.get("/:movieId", movies.getMovie);
+movieRouter.get("/year/:year", movies.getMoviesByYear);
+movieRouter.get("/genre/:genre", movies.getMoviesByGenre);
 
-  db.all(query, [], (err: Error | null, rows: any[]) => {
-    if (err) {
-      res.status(500).send(JSON.stringify(err));
-      return; // Ensure to return after sending a response
-    }
-
-    console.log(rows);
-    if (rows.length === 0) {
-      res.status(404).send('No movies found'); // Send a response for 404
-      return; // Ensure to return after sending a response
-    }
-
-    res.send(rows);
-  });
-};
-
-export const getMovie = (db: Database, req: Request, res: Response): void => {
-  const query = 'SELECT * FROM movies WHERE movieId = ?';
-
-  db.all(query, [req.params.movieId], (err: Error | null, rows: any[]) => {
-    if (err) {
-      res.status(500).send(JSON.stringify(err));
-      return; // Ensure to return after sending a response
-    }
-
-    if (rows.length === 0) {
-      res.status(404).send('Movie not found'); // Send a response for 404
-      return; // Ensure to return after sending a response
-    }
-
-    res.send(rows);
-  });
-};
+export default movieRouter;
